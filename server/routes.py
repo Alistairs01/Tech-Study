@@ -4,6 +4,12 @@ from server.extensions import db
 from server.models import User, Role, Video, Audio, Article, Comment
 
 main = Blueprint('main', __name__)
+@main.route('/', methods=['GET'])
+def index():
+    return jsonify({
+        "message": "Welcome to the Tech Study App! Please visit /homepage to continue."
+    }), 200
+
 
 @main.route('/homepage', methods=['GET'])
 def homepage():

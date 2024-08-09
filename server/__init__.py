@@ -1,21 +1,23 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
-# Initialize SQLAlchemy
 db = SQLAlchemy()
+migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
     
-    # Load configuration from server.config.Config
+    # Load configuration
     app.config.from_object('server.config.Config')
+    print("Configuration loaded:", app.config['SQLALCHEMY_DATABASE_URI'])  # Debug line
 
-    # Initialize SQLAlchemy with the app
+    # Initialize extensions
     db.init_app(app)
-
-    # Register blueprints or import routes
-    with app.app_context():
-        from server import routes
-        from server import models
+    migrate.init_app(app, db)
+    
+    # Register blueprints
+    from server.routes import main
+    app.register_blueprint(main)
     
     return app
